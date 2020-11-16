@@ -1,12 +1,11 @@
-package bot.java;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 
 public class OutMessage extends SplitJokes {
-    private final Map<String, ArrayList<Integer>> numberJokes = new HashMap<String, ArrayList<Integer>>();
+    private final Map<String, ArrayList<Integer>> numberJokes = new HashMap<>();
     private String fileName;
     private Integer number;
     private final WebJoke joke = new WebJoke();
@@ -21,7 +20,7 @@ public class OutMessage extends SplitJokes {
 
     public String findJoke(String message, String id) throws Exception {
         if (!numberJokes.containsKey(id)){
-            ArrayList<Integer> numbers = new ArrayList<Integer>();
+            ArrayList<Integer> numbers = new ArrayList<>();
             for (int i = 0; i <= 3; i++){
                 numbers.add(-1);
             }
@@ -41,8 +40,8 @@ public class OutMessage extends SplitJokes {
         if (message.equals("про школу"))
             makeNumberJoke(getClass().getResource("school.txt").getFile(), 3, id);
 
-        if (message.equals("случайный"))
-            return joke.GetJoke(id);
+        if (message.equals("случайный анекдот"))
+            return joke.getJoke(id);
 
         return makeFileReader(fileName).get(numberJokes.get(id).get(number)).toString();
     }
@@ -55,18 +54,15 @@ public class OutMessage extends SplitJokes {
     }
 
     private ArrayList<StringBuilder> makeFileReader(String file) throws Exception {
-        ArrayList<String> listLines = new ArrayList<String>();
+        ArrayList<String> listLines = new ArrayList<>();
         FileReader rf = new FileReader(file);
-        Scanner scan = new Scanner(rf);
-        try {
+        try (rf) {
+            Scanner scan = new Scanner(rf);
             while (scan.hasNextLine()) {
                 listLines.add(scan.nextLine());
             }
         }
-        finally {
-            rf.close();
-        }
-        return SplitText(listLines);
+        return splitText(listLines);
     }
 
     public String getMessage(ReplyKeyboardMarkup replyKeyboardMarkup) {
@@ -76,12 +72,11 @@ public class OutMessage extends SplitJokes {
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(false);
-        keyboard.clear();
-        keyboardFirstRow.clear();
         keyboardFirstRow.add("про доктора");
         keyboardFirstRow.add("про любовь");
         keyboardSecondRow.add("про соседей");
         keyboardSecondRow.add("про школу");
+        keyboardSecondRow.add("случайный анекдот");
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
         replyKeyboardMarkup.setKeyboard(keyboard);

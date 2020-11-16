@@ -1,16 +1,15 @@
-package bot.java;
+import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import java.io.IOException;
 
-public class EchoBot extends TelegramLongPollingBot {
-    OutMessage outMessage = new OutMessage();
-    ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+public class Bot extends TelegramLongPollingBot {
+    private final OutMessage outMessage = new OutMessage();
+    private final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 
-    public EchoBot() throws IOException {
+    public Bot() throws IOException {
     }
 
     public synchronized void onUpdateReceived(Update update) {
@@ -39,9 +38,10 @@ public class EchoBot extends TelegramLongPollingBot {
 
     public String getTextBot(Message message) throws Exception {
         String userText = message.getText();
-        if (userText.equals("Меню") || userText.equals("привет")) {
-            return this.outMessage.getMessage(replyKeyboardMarkup);
+        if (userText.equals("/help")) return outMessage.help();
+        if (userText.toLowerCase().equals("привет") || userText.toLowerCase().equals("меню")){
+            return outMessage.getMessage(replyKeyboardMarkup);
         }
-        return userText.equals("/help") ? this.outMessage.help() : this.outMessage.findJoke(userText, message.getChatId().toString());
+        return outMessage.findJoke(userText, message.getChatId().toString());
     }
 }
