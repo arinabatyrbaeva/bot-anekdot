@@ -27,7 +27,7 @@ class FirstUnitTest extends SplitJokes {
     void testWebJoke() throws Exception {
         WebJoke webJoke = new WebJoke();
         String randomJoke = message.findJoke("случайный анекдот", "1");
-        Assertions.assertEquals(randomJoke.split(" ")[1], "У");
+        Assertions.assertFalse(randomJoke.split(" ")[1].isEmpty());
         String testFile = getClass().getResource("testWebJoke").getFile();
         var listJokes = readFile(testFile);
         Assertions.assertEquals(listJokes.get(0), "<div class=\"anekdot\">");
