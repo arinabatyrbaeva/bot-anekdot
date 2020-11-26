@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
-class FirstUnitTest extends SplitJokes {
-    public FirstUnitTest() throws IOException {
+class test extends SplitJokes {
+    public test() throws IOException {
     }
     OutMessage message = new OutMessage();
     StringBuilder fileText = new StringBuilder();
